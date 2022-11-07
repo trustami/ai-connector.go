@@ -2,8 +2,6 @@ package ai_connector_go
 
 import (
 	"encoding/json"
-	"net/url"
-	"strconv"
 )
 
 type Summarizer struct {
@@ -26,10 +24,10 @@ func (s *Summarizer) SummarizeText(text string, sentenceCount int) (*Summary, er
 }
 
 func summarizeText(token string, text string, sentenceCount int) (*Summary, error) {
-	data := url.Values{}
-
-	data.Set("text", text)
-	data.Set("sentence_count", strconv.Itoa(sentenceCount))
+	data := map[string]interface{}{
+		"text":          text,
+		"sentenceCount": sentenceCount,
+	}
 
 	body, err := makeRequest(BaseURL+"/summ", token, data)
 	if err != nil {

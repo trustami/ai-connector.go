@@ -1,6 +1,10 @@
 package ai_connector_go
 
-import "testing"
+import (
+	"testing"
+)
+
+const TestToken = "my-test-token"
 
 func TestLangDetector_DetectLanguage(t *testing.T) {
 	langDetector := NewLangDetector(TestToken)
@@ -11,20 +15,20 @@ func TestLangDetector_DetectLanguage(t *testing.T) {
 	}
 
 	if lang.Language != "en" {
-		t.Error("Language should be 'en'")
+		t.Error("Language should be 'en' but was " + lang.Language)
 	}
 }
 
 func TestSentimentAnalyser_AnalyseSentiment(t *testing.T) {
 	sentimentAnalyser := NewSentimentAnalyser(TestToken)
 
-	sentiment, err := sentimentAnalyser.AnalyseSentiment("I hate this product")
+	sentiment, err := sentimentAnalyser.AnalyseSentiment("Ich hasse dieses Produkt, es ist absoluter mist!")
 	if err != nil {
 		t.Error(err)
 	}
 
-	if sentiment.Polarity != "negative" {
-		t.Error("Polarity should be 'negative'")
+	if sentiment.Polarity != SentimentNegative {
+		t.Error("Polarity should be 'Negative' but was " + sentiment.Polarity)
 	}
 }
 

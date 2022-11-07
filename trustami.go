@@ -1,10 +1,11 @@
 package ai_connector_go
 
 import (
+	"bytes"
+	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
-	"net/url"
-	"strings"
 )
 
 const (
@@ -12,13 +13,23 @@ const (
 	BaseURL = "https://api.trustami.ai"
 )
 
-func makeRequest(url, token string, data url.Values) ([]byte, error) {
-	req, err := http.NewRequest("POST", url, strings.NewReader(data.Encode()))
+type FailedResponse struct {
+	Status bool   `json:"status"`
+	Error  string `json:"error"`
+}
+
+func makeRequest(url, token string, data map[string]interface{}) ([]byte, error) {
+	jsonData, err := json.Marshal(data)
 	if err != nil {
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	req, err := http.NewRequest("POST", url, bytes.NewReader(jsonData))
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Authorization", "Bearer "+token)
 
 	client := &http.Client{}
@@ -34,6 +45,13 @@ func makeRequest(url, token string, data url.Values) ([]byte, error) {
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
+	}
+
+	var failed FailedResponse
+
+	err = json.Unmarshal(body, &failed)
+	if err == nil && !failed.Status {
+		return nil, fmt.Errorf(failed.Error)
 	}
 
 	return body, nil

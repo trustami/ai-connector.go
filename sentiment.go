@@ -2,12 +2,17 @@ package ai_connector_go
 
 import (
 	"encoding/json"
-	"net/url"
 )
 
 type SentimentAnalyser struct {
 	_token string
 }
+
+const (
+	SentimentPositive = "Positiv"
+	SentimentNegative = "Negativ"
+	SentimentNeutral  = "Neutral"
+)
 
 // Sentiment is a struct that represents the sentiment of a given text
 type Sentiment struct {
@@ -26,9 +31,9 @@ func (sa *SentimentAnalyser) AnalyseSentiment(text string) (*Sentiment, error) {
 }
 
 func analyseSentiment(token string, text string) (*Sentiment, error) {
-	data := url.Values{}
-
-	data.Set("text", text)
+	data := map[string]interface{}{
+		"text": text,
+	}
 
 	body, err := makeRequest(BaseURL+"/sent", token, data)
 	if err != nil {

@@ -2,7 +2,6 @@ package ai_connector_go
 
 import (
 	"encoding/json"
-	"net/url"
 )
 
 type LangDetector struct {
@@ -25,11 +24,11 @@ func (ld *LangDetector) DetectLanguage(text string) (*Language, error) {
 }
 
 func detectLanguage(token string, text string) (*Language, error) {
-	data := url.Values{}
+	data := map[string]interface{}{
+		"text": text,
+	}
 
-	data.Set("text", text)
-
-	body, err := makeRequest(BaseURL+"/language_detection", token, data)
+	body, err := makeRequest(BaseURL+"/lang", token, data)
 	if err != nil {
 		return nil, err
 	}
