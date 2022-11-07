@@ -50,7 +50,7 @@ func makeRequest(url, token string, data map[string]interface{}) ([]byte, error)
 	var failed FailedResponse
 
 	err = json.Unmarshal(body, &failed)
-	if err == nil && !failed.Status {
+	if err == nil && !failed.Status && failed.Error != "" {
 		return nil, fmt.Errorf(failed.Error)
 	}
 
