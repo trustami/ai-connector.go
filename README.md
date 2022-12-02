@@ -2,6 +2,12 @@
 
 This repository aims to provide a simple and easy to use connector to the Trustami.AI API.
 
+### Installation
+
+```bash
+go get github.com/trustami/ai-connector.go
+```
+
 ### Usage
 ```golang
 package main
