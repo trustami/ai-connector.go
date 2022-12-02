@@ -30,5 +30,8 @@ func main() {
 	}
 
 	fmt.Println(language.Language) // en
+	
+	// ai.NewSummarizer(token)
+	// ai.NewSentimentAnalyser(token)
 }
 ```
